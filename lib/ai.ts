@@ -7,7 +7,7 @@ const resourceName = process.env.AZURE_OPENAI_ENDPOINT!
 
 export const azure = createAzure({
   resourceName,
-  apiKey: process.env.AZURE_OPENAI_KEY!,
+  apiKey: process.env.AZURE_OPENAI_API_KEY!,
   apiVersion: process.env.AZURE_OPENAI_API_VERSION ?? '2025-01-01-preview',
 })
 
