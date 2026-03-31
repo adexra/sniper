@@ -3,7 +3,33 @@
     "allow": [
       "Bash(pnpm create:*)",
       "Bash(npm install:*)",
-      "Bash(pnpm --version)"
+      "Bash(pnpm --version)",
+      "Bash(npx @next/codemod@latest agents-md --yes)",
+      "Bash(npx @next/codemod@latest agents-md)",
+      "Bash(printf '\\\\n')",
+      "Bash(npx --yes @next/codemod@16.2.1 agents-md)",
+      "mcp__claude_ai_Supabase__list_projects",
+      "mcp__claude_ai_Supabase__get_project_url",
+      "mcp__claude_ai_Supabase__get_publishable_keys",
+      "mcp__claude_ai_Supabase__apply_migration",
+      "Bash(pnpm add:*)",
+      "Bash(\"F:/automated-sites/Automations/sniper/.gitignore\")",
+      "mcp__claude_ai_Supabase__list_tables",
+      "mcp__claude_ai_Supabase__generate_typescript_types",
+      "Skill(claude-api)",
+      "Bash(pnpm build:*)",
+      "Bash(cd:*)",
+      "mcp__claude_ai_Supabase__get_project",
+      "Bash(claude mcp:*)",
+      "Bash(ls F:/automated-sites/Automations/sniper/app/leads/[id]/)",
+      "Bash(cat F:/automated-sites/Automations/sniper/app/leads/[id]/page.tsx)",
+      "Bash(pnpm exec:*)",
+      "Bash(pnpm lint:*)",
+      "Bash(vercel --version)",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "Bash(gh auth:*)"
     ]
   }
 }
