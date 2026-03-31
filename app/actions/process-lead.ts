@@ -1,7 +1,7 @@
 'use server'
 
-import { generateObject } from 'ai'
-import { model } from '@/lib/ai'
+import { generateText, Output } from 'ai'
+import { model, modelFull } from '@/lib/ai'
 import { ExtractedDataSchema, PitchStrategySchema } from '@/lib/schemas'
 import { createClient } from '@/utils/supabase/server'
 import type { Json } from '@/types/supabase'
@@ -17,19 +17,17 @@ async function scrapeUrl(url: string): Promise<string> {
   })
   if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`)
   const html = await res.text()
-  // Strip tags to get readable text
   return html
     .replace(/<script[\s\S]*?<\/script>/gi, '')
     .replace(/<style[\s\S]*?<\/style>/gi, '')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s{2,}/g, ' ')
     .trim()
-    .slice(0, 8000) // cap context
+    .slice(0, 8000)
 }
 
 export async function processLead(rawText: string): Promise<ProcessLeadResult> {
   try {
-    // Resolve content — either scrape URL or use raw text directly
     const urlMatch = rawText.match(/https?:\/\/[^\s]+/)
     let content = rawText
     let sourceUrl: string | null = null
@@ -40,15 +38,14 @@ export async function processLead(rawText: string): Promise<ProcessLeadResult> {
         const scraped = await scrapeUrl(sourceUrl)
         content = `[Scraped from ${sourceUrl}]\n\n${scraped}\n\n[Original message]\n${rawText}`
       } catch {
-        // URL scrape failed — fall back to raw text only
         content = rawText
       }
     }
 
     // ── Step 1: The Parser ──────────────────────────────────────────────────
-    const { object: extractedData } = await generateObject({
+    const { experimental_output: extractedData } = await generateText({
       model,
-      schema: ExtractedDataSchema,
+      experimental_output: Output.object({ schema: ExtractedDataSchema }),
       system: `You are an elite business analyst for a high-end creative studio.
 Your job is to extract structured intelligence from raw freelance lead descriptions.
 Read between the lines. The "hiddenPainPoint" is the most important field — it's
@@ -62,9 +59,9 @@ Be concise but specific. If information is missing, make a smart inference based
     }
 
     // ── Step 2: The Strategist ──────────────────────────────────────────────
-    const { object: pitchStrategy } = await generateObject({
-      model,
-      schema: PitchStrategySchema,
+    const { experimental_output: pitchStrategy } = await generateText({
+      model: modelFull,
+      experimental_output: Output.object({ schema: PitchStrategySchema }),
       system: `You are the lead strategist at an elite creative studio that works with
 category-defining brands. You craft surgical pitches that make prospects feel
 deeply understood before a single proposal is sent.
